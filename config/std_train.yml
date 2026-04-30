@@ -1,0 +1,63 @@
+encoder:
+    type: Encoder
+    args:
+        kernel_size: 16
+        out_channels: 256
+
+decoder:
+    type: Decoder
+    args:
+        in_channels: 256
+        out_channels: 1
+        kernel_size: 16
+        stride: 8
+        bias: False
+
+inferset:
+    type: inf_dataset
+    args:
+        mix_scp: /public/home/qinxy/jarend/data/avse/eval_mix.scp
+        lip_scp: /public/home/qinxy/jarend/data/avse/eval_lip_emb.scp
+        expr_scp: /public/home/qinxy/jarend/data/avse/eval_expr_emb.scp
+        fs: 16000
+
+inferloader:
+    type: InfDataLoader
+    args:
+        trun_range: [64000, 64000]
+        batch_size: 1
+        num_workers: 2
+        shuffle: False
+        drop_last: False
+
+optimizer:
+    type: Adam
+    args:
+        lr: 0.001
+        weight_decay: 0
+
+AVGridNetJoint_kwargs:
+    pretrain: /public/home/qinxy/jarend/avse4_joint/models/skipConvNet/Saved_Model/best_model.ckpt
+    n_srcs: 1
+    n_fft: 128
+    stride: 64
+    window: hann
+    n_imics: 2
+    n_layers: 6
+    lstm_hidden_units: 360
+    attn_n_head: 8
+    attn_approx_qk_dim: 512
+    emb_dim: 256
+    emb_ks: 1
+    emb_hs: 1
+    activation: prelu
+    eps: 1.0e-5
+    use_builtin_complex: True
+    ref_channel: -1
+
+stft_kwargs:
+    n_fft: 128
+    win_length: 128
+    hop_length: 64
+    window: hann
+    use_builtin_complex: True
